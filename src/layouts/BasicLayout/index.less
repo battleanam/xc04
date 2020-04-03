@@ -1,0 +1,21 @@
+@layout-header-height: 56px;
+
+.BasicLayout {
+  .header {
+    background-color: #fff;
+    padding: 0 12px;
+    height: @layout-header-height;
+    line-height: @layout-header-height;
+
+    & > div {
+      margin-right: 12px;
+    }
+  }
+
+  .content {
+    padding: 24px 16px;
+    height: calc(100vh - @layout-header-height);
+    overflow: auto;
+  }
+}
+

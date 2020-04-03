@@ -1,0 +1,47 @@
+// 清除浮动
+.clearFix {
+  zoom: 1;
+
+  &::before,
+  &::after {
+    display: table;
+    content: ' ';
+  }
+
+  &::after {
+    clear: both;
+    height: 0;
+    font-size: 0;
+    visibility: hidden;
+  }
+}
+
+.customScrollBar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    display: none;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      display: inline-block;
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgb(239, 239, 239);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #bfbfbf;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1890ff;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #179a16;
+  }
+}
