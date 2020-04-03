@@ -5,17 +5,18 @@ import { Modal } from 'antd';
 
 import styles from './index.less';
 import util from '@/styles/util.less';
+import StandardPhoto from '@/pages/WorkSpace/components/StandardPhoto';
 
-const Workspace = ({ visible, shapes, close }) => {
+const Workspace = ({ visible, src, filename, deviceId, name, shapes, close }) => {
 
-  const { clientHeight } = document.body;
+  const picWidth = Math.ceil(3264 / 2448 * 713);
 
   return (
     <Modal
-      title={'Working Box'}
+      centered
+      title={'Information'}
       visible={visible}
       className={styles.Workspace}
-      style={{ top: clientHeight > 768 ? (clientHeight - 768) / 2 : 0 }}
       width={'1366px'}
       bodyStyle={{
         padding: 0,
@@ -26,12 +27,14 @@ const Workspace = ({ visible, shapes, close }) => {
       footer={null}
       onCancel={close}
     >
-      <div className={cn(util.customScrollBar, styles.widgetWrapper)}>
-        <div className={styles.labelWrapper}>
-
+      <div className={styles.widgetWrapper}>
+        <div className={styles.labelWrapper} style={{ width: picWidth + 'px' }}>
+          <img style={{ width: picWidth + 'px' }} src={src} alt={filename}/>
         </div>
-        <div>
-
+        <div className={cn(styles.operates, util.customScrollBar)} style={{ width: 1366 - picWidth + 'px' }}>
+          <h4>测报灯编号: {deviceId}</h4>
+          <h4>拍摄时间: {name}</h4>
+          <StandardPhoto/>
         </div>
       </div>
     </Modal>

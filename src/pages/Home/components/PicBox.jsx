@@ -103,13 +103,13 @@ class PicBox extends Component {
           content={<PicAnalysis source={tableSource}/>}
           overlayClassName={'noPadding'}
           mouseEnterDelay={.4}
-          visible={false}
         >
           <Card
             hoverable={true}
             className={styles.PicBox}
             onClick={() => {
-              return
+              if (window.host)
+                return;
               if (!workspaceVisible) {
                 this.setState({ workspaceVisible: true });
               }
@@ -135,6 +135,7 @@ class PicBox extends Component {
           </Card>
         </Popover>
         <Workspace
+          {...this.props}
           visible={workspaceVisible}
           shapes={shapes}
           close={() => this.setState({ workspaceVisible: false })}

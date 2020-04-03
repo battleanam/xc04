@@ -8,7 +8,7 @@ import request from '@/utils/request';
  * @returns {Promise<any>}
  */
 export async function getAnalysisList({ userName, start, end }) {
-  return request('/Su/GetAnnoList', { method: 'POST', data: { userName, start, end } });
+  return request(window.host + '/Su/GetAnnoList', { method: 'POST', data: { userName, start, end } });
 }
 
 
@@ -20,7 +20,7 @@ export async function getAnalysisList({ userName, start, end }) {
  * @returns {Promise<any>}
  */
 export async function loadPics(sDate, eDate, userName) {
-  return request('/Su/Pic', { method: 'GET', params: { sDate, eDate, userName } });
+  return request(window.host + '/Su/Pic', { method: 'GET', params: { sDate, eDate, userName } });
 }
 
 /**
@@ -29,7 +29,7 @@ export async function loadPics(sDate, eDate, userName) {
  * @returns {Promise<any>}
  */
 export async function getBigPic(filename) {
-  return request('/Su/GetBigPic', { method: 'GET', params: { filename } });
+  return request(window.host + '/Su/GetBigPic', { method: 'GET', params: { filename } });
 }
 
 /**
@@ -38,7 +38,7 @@ export async function getBigPic(filename) {
  * @returns {Promise<any>}
  */
 export async function getSmallPic(filename) {
-  return request('/Su/GetBigPic', { method: 'GET', params: { filename } });
+  return request(window.host + '/Su/GetBigPic', { method: 'GET', params: { filename } });
 }
 
 /**
@@ -47,5 +47,5 @@ export async function getSmallPic(filename) {
  * @returns {Promise<any>}
  */
 export async function getMarks(filename) {
-  return request('/Su/getAnno', { method: 'POST', data: { filename } });
+  return request(window.host + '/Su/getAnno', { method: 'POST', data: { filename } });
 }

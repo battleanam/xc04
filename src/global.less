@@ -8,11 +8,20 @@ body {
 
 .noPadding {
   padding: 0;
-  .ant-popover-inner-content {
+
+  .ant-popover-inner-content,
+  .ant-modal,
+  .ant-tabs-left-content,
+  .ant-tabs-right-content
+  {
     padding: 0;
+  }
+}
+
+.noBorderLeft {
+
+  .ant-tabs-tab {
+    border-left: unset !important;
   }
 
-  .ant-modal{
-    padding: 0;
-  }
 }

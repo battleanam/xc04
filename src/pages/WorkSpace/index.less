@@ -4,17 +4,24 @@
   .widgetWrapper {
 
     height: 713px;
-    overflow: auto;
+    position: relative;
+    overflow: hidden;
 
     .labelWrapper {
-      background-color: #1890ff;
-      width: 713px;
       height: 713px;
+      position: absolute;
+      left: 0;
     }
 
-    .standardPhoto {
+    .operates {
+      position: absolute;
+      right: 0;
+      height: 100%;
+      overflow: auto;
+      padding: 8px 12px;
 
     }
+
 
   }
 

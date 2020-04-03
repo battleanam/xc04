@@ -59,21 +59,22 @@ const Model = {
           type: 'setPicList',
           payload: picList.map(pic => {
             const filename = pic.split(',')[0];
-            const date = filename.split('_')[1];
+            const [deviceId, date] = filename.split('_');
             const year = date.slice(0, 4),
               month = date.slice(4, 6),
               day = date.slice(6, 8),
               hours = date.slice(8, 10),
               minutes = date.slice(10, 12),
               seconds = date.slice(12, 14);
-            const fmt1 = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            const name = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
             const id = filename.split('.')[0];
             return {
               id,
-              name: fmt1,
+              deviceId,
+              name,
               filename,
-              src: `/Su/GetBigPic?filename=${filename}`,
-              smallSrc: `/Su/GetSmallPic?filename=${filename}`,
+              src: `${window.host}/Su/GetBigPic?filename=${filename}`,
+              smallSrc: `${window.host}/Su/GetSmallPic?filename=${filename}`,
             };
           }),
         });
