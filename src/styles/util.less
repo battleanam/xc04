@@ -16,11 +16,15 @@
   }
 }
 
+// 使用自定义的滚动条
 .customScrollBar {
   &::-webkit-scrollbar {
     width: 4px;
     height: 4px;
-    display: none;
+
+    &.showOnHover {
+      display: none;
+    }
   }
 
   &:hover {
@@ -44,4 +48,14 @@
   &::-webkit-scrollbar-corner {
     background: #179a16;
   }
+}
+
+// 使用定位的方式绝对居中 使用时父组件 position 的值需为 relative
+.center {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
 }

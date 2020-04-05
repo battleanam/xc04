@@ -1,12 +1,17 @@
 // ref: https://umijs.org/config/
+
 export default {
   treeShaking: true,
   routes: [
     {
       path: '/',
+      component: '../layouts/LoginLayout/index',
+    },
+    {
+      path: '/home',
       component: '../layouts/BasicLayout/index',
       routes: [
-        { path: '/', component: '../pages/Home/index' },
+        { path: '', component: '../pages/Home/index' },
       ],
     },
   ],
@@ -41,4 +46,7 @@ export default {
       },
     }],
   ],
+  theme: {
+    'primary-color': '#52c41a',
+  },
 };

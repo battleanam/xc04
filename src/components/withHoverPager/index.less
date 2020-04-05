@@ -1,0 +1,89 @@
+@import "../../styles/util.less";
+
+.HoverPager {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  .wrappedComponent {
+    .center();
+    z-index: 20;
+  }
+
+  .leftArrow, .rightArrow, .pagerInfo {
+    .center();
+    width: 32px;
+    height: 64px;
+    line-height: 64px;
+    border-radius: 2px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0);
+    border: unset;
+    display: none;
+    z-index: 21;
+
+    svg {
+      margin-top: 16px;
+    }
+  }
+
+  &:hover {
+    .leftArrow, .rightArrow, .pagerInfo {
+      display: block;
+    }
+  }
+
+  .pagerInfo {
+    width: 128px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    cursor: default;
+    color: rgba(0, 0, 0, 0);
+    border: unset;
+    user-select: none;
+
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background-color: rgba(0, 0, 0, .45);
+    }
+  }
+
+  .leftArrow {
+    right: unset;
+    left: 4px;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, .45);
+
+      &, .rightArrow {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, .45);
+      }
+    }
+  }
+
+  .rightArrow {
+    right: 4px;
+    left: unset;
+
+    &:hover {
+      &, .leftArrow {
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, .45);
+      }
+    }
+  }
+
+  .leftArrow, .rightArrow {
+    &.disabled {
+      &, &:hover {
+        cursor: not-allowed;
+        background-color: unset;
+      }
+    }
+  }
+
+}

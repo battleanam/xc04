@@ -3,12 +3,24 @@
 .BasicLayout {
   .header {
     background-color: #fff;
-    padding: 0 12px;
+    padding: 0 16px;
     height: @layout-header-height;
     line-height: @layout-header-height;
 
     & > div {
       margin-right: 12px;
+    }
+
+    .funBtn {
+      float: right;
+      cursor: pointer;
+      padding: 0 12px;
+      margin: 0;
+      font-size: 14px;
+
+      &:hover {
+        background-color: rgba(0,0,0,.025);
+      }
     }
   }
 
