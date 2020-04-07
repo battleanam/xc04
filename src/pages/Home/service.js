@@ -49,3 +49,12 @@ export async function getSmallPic(filename) {
 export async function getMarks(filename) {
   return request(window.host + '/Su/getAnno', { method: 'POST', data: { filename } });
 }
+
+/**
+ * 获取标签
+ * @param img_name 图片名称
+ * @returns {Promise<any>}
+ */
+export async function sqlSearch(img_name) {
+  return request(window.host + `/img/sql_search?img_name=${img_name}`, { method: 'GET'});
+}

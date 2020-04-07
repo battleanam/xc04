@@ -1,6 +1,5 @@
 import React from 'react';
 import cn from 'classnames';
-
 import { Button, Modal } from 'antd';
 
 import styles from './index.less';
@@ -8,7 +7,7 @@ import util from '@/styles/util.less';
 import StandardPhoto from '@/pages/WorkSpace/components/StandardPhoto';
 import PreViewer from '@/pages/WorkSpace/components/PreViewer';
 
-const Workspace = ({ visible, src, filename, deviceId, name, shapes, close }) => {
+const Workspace = ({ visible, src, filename, deviceId, name, close }) => {
 
   const picWidth = Math.ceil(3264 / 2448 * 713);
 

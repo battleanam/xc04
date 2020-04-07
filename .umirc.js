@@ -11,7 +11,8 @@ export default {
       path: '/home',
       component: '../layouts/BasicLayout/index',
       routes: [
-        { path: '', component: '../pages/Home/index' },
+        { path: '/home', component: '../pages/Home/index' },
+        { path: '/home/insect', component: '../pages/Insect/index' },
       ],
     },
   ],
@@ -21,7 +22,7 @@ export default {
       changeOrigin: true,
     },
     '/img/': {
-      target: 'http://192.168.166.184:8001',
+      target: 'http://124.128.96.67:5000',
       changeOrigin: true,
       pathRewrite: { '^/img': '' },
     },

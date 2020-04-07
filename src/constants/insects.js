@@ -1,4 +1,4 @@
-export const bugUrlMapping = {
+export const insectUrlMapping = {
   '草地贪夜蛾': [
     require(`@/assets/bugs/caoditanyee/1.jpeg`),
   ],
@@ -42,11 +42,11 @@ export const bugUrlMapping = {
     require(`@/assets/bugs/lixiaoshixinchong/1.jpeg`),
   ],
   '美国白蛾': [
+    require(`@/assets/bugs/meiguobaie/5.jpg`),
     require(`@/assets/bugs/meiguobaie/1.jpg`),
     require(`@/assets/bugs/meiguobaie/2.jpg`),
     require(`@/assets/bugs/meiguobaie/3.jpg`),
     require(`@/assets/bugs/meiguobaie/4.jpg`),
-    require(`@/assets/bugs/meiguobaie/5.jpg`),
     require(`@/assets/bugs/meiguobaie/6.jpg`),
     require(`@/assets/bugs/meiguobaie/7.JPG`),
   ],

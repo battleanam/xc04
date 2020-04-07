@@ -3,7 +3,7 @@ import { reduce } from 'lodash';
 import { getMarks } from '../service';
 import cn from 'classnames';
 
-import { Card, Popover, Skeleton } from 'antd';
+import { Card, Popover } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import styles from './components.less';
@@ -32,9 +32,9 @@ class PicBox extends Component {
       workspaceVisible: false,
     };
 
-    const { src, filename, bugStyles } = props;
+    const { src, filename, insectStyles } = props;
     this.loadPic(src);
-    this.loadTableSource(filename, bugStyles);
+    this.loadTableSource(filename, insectStyles);
   }
 
   loadPic(src) {
@@ -114,17 +114,17 @@ class PicBox extends Component {
                 this.setState({ workspaceVisible: true });
               }
             }}
+            loading={imgLoading}
             cover={
-              <Skeleton loading={imgLoading} active>
-                <img
-                  src={src}
-                  alt={filename}
-                  style={{
-                    width: 'calc(100% - 2px)',
-                    marginLeft: '1px',
-                  }}
-                />
-              </Skeleton>
+              !imgLoading &&
+              <img
+                src={src}
+                alt={filename}
+                style={{
+                  width: 'calc(100% - 2px)',
+                  marginLeft: '1px',
+                }}
+              />
             }
             bodyStyle={{ padding: 0 }}
           >

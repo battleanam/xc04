@@ -12,22 +12,22 @@ class Home extends Component {
     this.state = {
       viewLength: 24,
     };
-    this.requestBugTypes();
+    this.requestInsectTypes();
   }
 
-  requestBugTypes() {
+  requestInsectTypes() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'bugs/getBugTypes',
+      type: 'insect/getInsectTypes',
     });
     dispatch({
-      type: 'bugs/getBugImgUrlMap',
+      type: 'insect/getInsectImgUrlMap',
     });
   }
 
   render() {
 
-    const { picList, picListLoading, bugStyles, viewLength, dispatch } = this.props;
+    const { picList, picListLoading, insectStyles, viewLength, dispatch } = this.props;
 
     return (
       <div
@@ -49,7 +49,7 @@ class Home extends Component {
           renderItem={(item) => {
             return (
               <List.Item>
-                <PicBox {...item} bugStyles={bugStyles}/>
+                <PicBox {...item} insectStyles={insectStyles}/>
               </List.Item>
             );
           }}
@@ -69,5 +69,5 @@ class Home extends Component {
   }
 }
 
-export default connect(({ home, bugs }) => ({ ...home, ...bugs }))(Home);
+export default connect(({ home, insect }) => ({ ...home, ...insect }))(Home);
 

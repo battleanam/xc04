@@ -11,8 +11,8 @@ const columns = [
     title: '标注样式',
     dataIndex: 'style',
     key: 'style',
-    render: (text, {color, width = 1}) => (
-      <div className={styles.previewBox} style={{borderColor: color, borderWidth: width + 'px'}} />
+    render: (text, {color, weight = 1}) => (
+      <div className={styles.previewBox} style={{borderColor: color, borderWidth: weight + 'px'}} />
     ),
   },
   {

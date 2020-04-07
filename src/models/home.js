@@ -29,7 +29,7 @@ function analysis(marks, styles) {
 const Model = {
   namespace: 'home',
   state: {
-    navigatorVisible: false, // 时候展示返回主页按钮
+    navigatorVisible: false, // 是否展示返回主页按钮
     dateUnit: 'month', // 选择时间范围时日期的单位 month | day
     dateRange: [], // 时间范围
     picList: [], // 测报灯图像列表
@@ -38,7 +38,7 @@ const Model = {
     analysisList: [], // 对于一张图片的统计数据
     analysisLoading: false, // 统计数据加载状态
     imgList: [], // 当前加载的图像列表 存放 Image Dom Entity
-    deviceId: '69010601', // 设备编号
+    deviceId: '69060502', // 设备编号
     deviceList: [], // 设备列表
   },
   effects: {

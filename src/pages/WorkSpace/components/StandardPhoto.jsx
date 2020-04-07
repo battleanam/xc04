@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { map } from 'lodash';
 import cn from 'classnames';
-import { bugUrlMapping } from '@/constants/bugs';
+import { insectUrlMapping } from '@/constants/insects';
 
 import { Tabs } from 'antd';
 import withHoverPager from '@/components/withHoverPager';
@@ -11,16 +11,16 @@ import styles from './components.less';
 
 const { TabPane } = Tabs;
 
-const Item = ({ bugName }) => {
+const Item = ({ insectName }) => {
   const [current, setCurrent] = useState(0);
 
-  if (!bugUrlMapping[bugName]) {
+  if (!insectUrlMapping[insectName]) {
     return (
       <span> 暂无此类害虫的标准照 </span>
     );
   }
 
-  const [urlList = []] = [bugUrlMapping[bugName]];
+  const [urlList = []] = [insectUrlMapping[insectName]];
   const Viewer = withHoverPager(FixHeightImg);
 
   return (
@@ -47,7 +47,7 @@ const StandardPhoto = () => {
         map(['草地贪夜蛾', '暗黑鳃金龟', '白星花金龟1', '茶翅椿', '大地老虎', '大黑鳃金龟', '稻飞虱', '美国白蛾'], item => {
           return (
             <TabPane tab={item} key={item} className={styles.tabPane}>
-              <Item bugName={item}/>
+              <Item insectName={item}/>
             </TabPane>
           );
         })
