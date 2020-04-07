@@ -1,13 +1,16 @@
 import React from 'react';
 import cn from 'classnames';
-import { Button, Modal } from 'antd';
+import { connect } from 'dva';
 
-import styles from './index.less';
-import util from '@/styles/util.less';
+import { Button, Modal } from 'antd';
 import StandardPhoto from '@/pages/WorkSpace/components/StandardPhoto';
 import PreViewer from '@/pages/WorkSpace/components/PreViewer';
 
-const Workspace = ({ visible, src, filename, deviceId, name, close }) => {
+import styles from './index.less';
+import util from '@/styles/util.less';
+import KonvaEngine from '@/pages/WorkSpace/components/KonvaEngine';
+
+const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
 
   const picWidth = Math.ceil(3264 / 2448 * 713);
 
@@ -26,11 +29,21 @@ const Workspace = ({ visible, src, filename, deviceId, name, close }) => {
       wrapClassName={'noPadding'}
       footer={null}
       maskClosable={false}
-      onCancel={close}
+      onCancel={() => {
+        dispatch({
+          type: 'workspace/setVisible',
+          payload: false,
+        });
+        dispatch({
+          type: 'workspace/setShapes',
+          payload: [],
+        });
+      }}
     >
       <div className={styles.widgetWrapper}>
         <div className={styles.labelWrapper} style={{ width: picWidth + 'px' }}>
-          <img style={{ width: picWidth + 'px' }} src={src} alt={filename}/>
+          <KonvaEngine src={src} height={713} width={picWidth}/>
+          {/*<img style={{ width: picWidth + 'px' }} src={src} alt={filename}/>*/}
         </div>
         <div
           className={cn(styles.operates, util.customScrollBar)}
@@ -41,7 +54,10 @@ const Workspace = ({ visible, src, filename, deviceId, name, close }) => {
           <h4>拍摄时间: {name}</h4>
           <StandardPhoto/>
           <PreViewer
-            wrapperStyle={{ height: 1366 - 24 - picWidth + 'px' }}
+            picWidth={picWidth}
+            picHeight={713}
+            stageWidth={1366 - picWidth - 30}
+            stageHeight={1366 - picWidth - 30}
             src={src}
           />
           <p className={styles.message}>向下滑动查看统计信息</p>
@@ -51,4 +67,4 @@ const Workspace = ({ visible, src, filename, deviceId, name, close }) => {
   );
 };
 
-export default Workspace;
+export default connect(({ workspace }) => ({ ...workspace }))(Workspace);

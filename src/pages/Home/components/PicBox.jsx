@@ -3,13 +3,12 @@ import { reduce } from 'lodash';
 import { getMarks } from '../service';
 import cn from 'classnames';
 
-import { Card, Popover } from 'antd';
+import { Card, message, Popover } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 
 import styles from './components.less';
 import util from '@/styles/util.less';
 import PicAnalysis from '@/pages/Home/components/PicAnalysis';
-import Workspace from '@/pages/WorkSpace';
 
 function HasLabel() {
   return (
@@ -28,8 +27,6 @@ class PicBox extends Component {
       img: null,
       tableLoading: true,
       tableSource: [],
-      shapes: [],
-      workspaceVisible: false,
     };
 
     const { src, filename, insectStyles } = props;
@@ -94,8 +91,8 @@ class PicBox extends Component {
   }
 
   render() {
-    const { src, filename, name } = this.props;
-    const { imgLoading, tableSource, workspaceVisible, shapes } = this.state;
+    const { src, filename, name, onClick } = this.props;
+    const { imgLoading, tableSource } = this.state;
     return (
       <>
         <Popover
@@ -108,10 +105,10 @@ class PicBox extends Component {
             hoverable={true}
             className={styles.PicBox}
             onClick={() => {
-              if (window.host)
-                return;
-              if (!workspaceVisible) {
-                this.setState({ workspaceVisible: true });
+              if (imgLoading) {
+                message.info('正在加载图片，请稍候');
+              } else {
+                onClick();
               }
             }}
             loading={imgLoading}
@@ -134,12 +131,6 @@ class PicBox extends Component {
             {tableSource.length > 0 && <HasLabel/>}
           </Card>
         </Popover>
-        <Workspace
-          {...this.props}
-          visible={workspaceVisible}
-          shapes={shapes}
-          close={() => this.setState({ workspaceVisible: false })}
-        />
       </>
     );
   }

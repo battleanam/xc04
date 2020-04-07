@@ -31,10 +31,10 @@ const Model = {
   state: {
     navigatorVisible: false, // 是否展示返回主页按钮
     dateUnit: 'month', // 选择时间范围时日期的单位 month | day
-    dateRange: [], // 时间范围
+    dateRange: [moment('2019-08-01')], // 时间范围
     picList: [], // 测报灯图像列表
     picListLoading: false, // 测报灯图像列表加载状态
-    viewLength: 12, // 显示图片的数量
+    viewLength: 1, // 显示图片的数量
     analysisList: [], // 对于一张图片的统计数据
     analysisLoading: false, // 统计数据加载状态
     imgList: [], // 当前加载的图像列表 存放 Image Dom Entity
@@ -43,7 +43,6 @@ const Model = {
   },
   effects: {
     * getPicList({ sDate, eDate, userName }, { put, call }) {
-      // const userName = sessionStorage.getItem('username');
       yield put({ type: 'setPicListLoading', payload: true });
       const {
         Code, data, msg,
@@ -130,7 +129,7 @@ const Model = {
       return {
         ...state,
         picList: payload,
-        viewLength: 12,
+        viewLength: 1,
       };
     },
     setPicListLoading(state, { payload }) {

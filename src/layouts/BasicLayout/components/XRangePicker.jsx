@@ -11,7 +11,8 @@ class XRangePicker extends Component {
   constructor(props) {
     super(props);
     this.onMonthChange = this.onMonthChange.bind(this);
-    this.onMonthChange(moment());
+    const { value } = props;
+    this.onMonthChange(value ? value[0] : moment());
   }
 
   onMonthChange(e) {
@@ -48,7 +49,7 @@ class XRangePicker extends Component {
               value={value}
               onChange={onChange}
               size={'small'}
-              format={"YYYY年MM月DD日"}
+              format={'YYYY年MM月DD日'}
               allowClear={false}
             /> :
             <DatePicker
@@ -56,7 +57,7 @@ class XRangePicker extends Component {
               value={value[0]}
               onChange={this.onMonthChange}
               size={'small'}
-              format={"YYYY年MM月"}
+              format={'YYYY年MM月'}
               allowClear={false}
             />
         }

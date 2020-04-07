@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import styles from './index.less';
 import { Button, List } from 'antd';
 import PicBox from '@/pages/Home/components/PicBox';
+import Workspace from '@/pages/WorkSpace';
 
 class Home extends Component {
 
@@ -49,7 +50,24 @@ class Home extends Component {
           renderItem={(item) => {
             return (
               <List.Item>
-                <PicBox {...item} insectStyles={insectStyles}/>
+                <PicBox
+                  {...item}
+                  insectStyles={insectStyles}
+                  onClick={() => {
+                    dispatch({
+                      type: 'workspace/setPicInfo',
+                      payload: item,
+                    });
+                    dispatch({
+                      type: 'workspace/setVisible',
+                      payload: true,
+                    });
+                    dispatch({
+                      type: 'workspace/getShapes',
+                      payload: item.filename,
+                    });
+                  }}
+                />
               </List.Item>
             );
           }}
@@ -64,6 +82,9 @@ class Home extends Component {
             });
           }}>加载更多</Button>
         }
+
+        <Workspace/>
+
       </div>
     );
   }
