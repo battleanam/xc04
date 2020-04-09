@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import router from 'umi/router';
 import { connect } from 'dva';
 
 import { Form, Input, message } from 'antd';
 import { LoadingOutlined, LockOutlined, LoginOutlined, UserOutlined } from '@ant-design/icons';
 
-import { login } from '@/pages/User/service';
 
 import styles from './index.less';
 
@@ -15,41 +13,41 @@ class LoginLayout extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      errorMsg: '',
-      loading: false,
-    };
     this.doLogin = this.doLogin.bind(this);
+    this.onKeyup = this.onKeyup.bind(this);
+  }
+
+  componentDidMount() {
+    this.loginForm.current.resetFields();
   }
 
   doLogin() {
     const { dispatch } = this.props;
     this.loginForm.current.validateFields().then(({ username, password }) => {
-      this.setState({ loading: true, errorMsg: '' });
-      login(username, password).then(({ Code, msg }) => {
-        setTimeout(() => {
-          if (Code === 1000) {
-            this.setState({ loading: false });
-            sessionStorage.setItem('username', username);
-            dispatch({
-              type: 'user/setUserInfo',
-              payload: { username, realName: username },
-            });
-            router.replace('home');
-            this.loginForm.current.resetFields();
-          } else {
-            this.setState({ loading: false, errorMsg: msg });
-          }
-        }, 500);
+      dispatch({
+        type: 'user/setLoading',
+        payload: true
       });
+      setTimeout(() => {
+        dispatch({
+          type: 'user/login',
+          payload: { username, password },
+        });
+      }, 500);
     }).catch(() => {
       message.info('请补全表单信息！');
     });
   }
 
+  onKeyup(e) {
+    if (e.keyCode === 13) {
+      this.doLogin();
+    }
+  }
+
   render() {
 
-    const { errorMsg, loading } = this.state;
+    const { errorMsg, loading, dispatch } = this.props;
     const [username, password] = ['', ''];
 
     return (
@@ -64,6 +62,9 @@ class LoginLayout extends Component {
               name={'loginForm'}
               ref={this.loginForm}
               initialValues={{ username, password }}
+              onValuesChange={value => {
+                dispatch({ type: 'user/setUserInfo', payload: value });
+              }}
             >
               <Form.Item
                 name={'username'}
@@ -72,6 +73,7 @@ class LoginLayout extends Component {
                 <Input
                   prefix={<UserOutlined/>}
                   placeholder={'请输入登录用户名'}
+                  onKeyUp={this.onKeyup}
                 />
               </Form.Item>
               <Form.Item
@@ -81,6 +83,7 @@ class LoginLayout extends Component {
                 <Input.Password
                   prefix={<LockOutlined/>}
                   placeholder={'请输入登录密码'}
+                  onKeyUp={this.onKeyup}
                 />
               </Form.Item>
             </Form>
@@ -114,4 +117,4 @@ class LoginLayout extends Component {
 
 }
 
-export default connect()(LoginLayout);
+export default connect(({ user }) => ({ ...user }))(LoginLayout);

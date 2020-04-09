@@ -30,13 +30,22 @@ const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
       footer={null}
       maskClosable={false}
       onCancel={() => {
+
         dispatch({
           type: 'workspace/setVisible',
           payload: false,
         });
         dispatch({
+          type: 'previewer/setDrawing',
+          payload: false,
+        });
+        dispatch({
           type: 'workspace/setShapes',
           payload: [],
+        });
+        dispatch({
+          type: 'previewer/setDrawing',
+          payload: false,
         });
       }}
     >

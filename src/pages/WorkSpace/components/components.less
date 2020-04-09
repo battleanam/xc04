@@ -1,7 +1,11 @@
+
 .StandardPhoto {
+
+  @StandardPhotoHeight: 220px;
+
   border: 1px solid #f0f0f0;
   padding: 0;
-  height: 220px;
+  height: @StandardPhotoHeight;
 
   .tabPane {
 
@@ -15,6 +19,18 @@
     .picSelector {
 
     }
+
+    .noImgInfo {
+      line-height: @StandardPhotoHeight;
+      width: 100%;
+      text-align: center;
+      display: inline-block;
+
+      span {
+        margin: 0 4px;
+      }
+    }
+
   }
 
 }

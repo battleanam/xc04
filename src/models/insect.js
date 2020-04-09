@@ -21,6 +21,7 @@ const Model = {
     insectStyles: {}, // 害虫类型与标注框样式的映射
     insectTypes: [], // 害虫类型列表
     insectTypesLoading: true, // 害虫类型列表加载状态
+    selectedInsect: {}, // 当前选中的害虫类型
     modalVisible: false, // 添加或修改害虫类型弹窗是否可见
     insectSaveLoading: false, // 保存害虫类型编辑时的加载状态
   },
@@ -41,6 +42,12 @@ const Model = {
       let payload = [];
       if (Code === 1000) {
         payload = data;
+        if (data.length) {
+          yield put({
+            type: 'setSelectedInsect',
+            payload: data[0],
+          });
+        }
       }
       yield put({
         type: 'setInsectTypes',
@@ -140,6 +147,12 @@ const Model = {
       return {
         ...state,
         insectTypes: [...insectTypes, payload],
+      };
+    },
+    setSelectedInsect(state, { payload }) {
+      return {
+        ...state,
+        selectedInsect: payload,
       };
     },
     removeInsect(state, { payload: { keyid } }) {
