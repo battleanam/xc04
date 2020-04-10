@@ -130,7 +130,7 @@ class BasicLayout extends Component {
             </div>
 
             <div className={styles.funBtn} onClick={() => {
-              sqlSearch('69060502_20190825030243978_01.jpg').then()
+              sqlSearch('69060502_20190825030243978_01.jpg').then();
             }}>
               <LineChartOutlined/>
               数据统计
@@ -146,6 +146,26 @@ class BasicLayout extends Component {
   }
 }
 
-export default connect(({ home, user }) => ({ ...home, ...user }))(BasicLayout);
+export default connect(
+  (
+    {
+      home: {
+        dateUnit,
+        dateRange,
+        deviceId,
+      },
+      user: {
+        realName,
+      },
+    },
+  ) => (
+    {
+      dateUnit,
+      dateRange,
+      deviceId,
+      realName,
+    }
+  ),
+)(BasicLayout);
 
 

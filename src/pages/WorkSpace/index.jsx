@@ -10,7 +10,15 @@ import styles from './index.less';
 import util from '@/styles/util.less';
 import KonvaEngine from '@/pages/WorkSpace/components/KonvaEngine';
 
-const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
+const Workspace = (
+  {
+    visible,
+    src,
+    deviceId,
+    name,
+    dispatch,
+  },
+) => {
 
   const picWidth = Math.ceil(3264 / 2448 * 713);
 
@@ -36,8 +44,8 @@ const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
           payload: false,
         });
         dispatch({
-          type: 'previewer/setDrawing',
-          payload: false,
+          type: 'workspace/setCurrentShape',
+          payload: -1,
         });
         dispatch({
           type: 'workspace/setShapes',
@@ -47,12 +55,15 @@ const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
           type: 'previewer/setDrawing',
           payload: false,
         });
+        dispatch({
+          type: 'previewer/setMovingPoint',
+          payload: [],
+        });
       }}
     >
       <div className={styles.widgetWrapper}>
         <div className={styles.labelWrapper} style={{ width: picWidth + 'px' }}>
           <KonvaEngine src={src} height={713} width={picWidth}/>
-          {/*<img style={{ width: picWidth + 'px' }} src={src} alt={filename}/>*/}
         </div>
         <div
           className={cn(styles.operates, util.customScrollBar)}
@@ -69,11 +80,28 @@ const Workspace = ({ visible, src, filename, deviceId, name, dispatch }) => {
             stageHeight={1366 - picWidth - 30}
             src={src}
           />
-          <p className={styles.message}>向下滑动查看统计信息</p>
         </div>
       </div>
     </Modal>
   );
 };
 
-export default connect(({ workspace }) => ({ ...workspace }))(Workspace);
+export default connect(
+  (
+    {
+      workspace: {
+        visible,
+        src,
+        deviceId,
+        name,
+      },
+    },
+  ) => (
+    {
+      visible,
+      src,
+      deviceId,
+      name,
+    }
+  ),
+)(Workspace);

@@ -1,6 +1,7 @@
 import { Circle, Layer, Line } from 'react-konva';
 import { map } from 'lodash';
 import React from 'react';
+import { message } from 'antd';
 
 const PolygonDrawer = (
   {
@@ -8,6 +9,7 @@ const PolygonDrawer = (
     drawing,
     points,
     movingPoint,
+    strokeColor = 'red',
     dispatch,
   },
 ) => {
@@ -27,10 +29,14 @@ const PolygonDrawer = (
 
   const endDrawing = () => {
     if (drawing) {
-      dispatch({
-        type: 'workspace/addShape',
-        payload: viewPoints,
-      });
+      if (viewPoints.length > 6) {
+        dispatch({
+          type: 'workspace/addShape',
+          payload: viewPoints,
+        });
+      }else {
+        message.info('本次绘制被系统丢弃，因为绘制的点不足以构成多边形。');
+      }
       dispatch({
         type: 'previewer/setPoints',
         payload: [],
@@ -52,7 +58,7 @@ const PolygonDrawer = (
         <Line
           x={0}
           y={0}
-          stroke={'red'}
+          stroke={strokeColor}
           strokeWidth={2 / scale}
           points={viewPoints}
         />
@@ -64,16 +70,24 @@ const PolygonDrawer = (
             index % 2 === 0 &&
             <Circle
               key={index}
-              radius={4 / scale}
-              fill={'red'}
+              radius={3 / scale}
+              fill={strokeColor}
               x={point}
               y={viewPoints[index + 1]}
               onClick={(e) => {
-                const { evt: { offsetX: x, offsetY: y } } = e;
+                const { currentTarget: { attrs: { x, y } } } = e;
                 if (
-                  Math.abs(x - viewPoints[0]) < 4 / scale
-                  &&
-                  Math.abs(y - viewPoints[1]) < 4 / scale
+                  (
+                    Math.abs(x - viewPoints[0]) < 4.5 / scale
+                    &&
+                    Math.abs(y - viewPoints[1]) < 4.5 / scale
+                  )
+                  ||
+                  (
+                    Math.abs(x - points[points.length - 2]) < 4.5 / scale
+                    &&
+                    Math.abs(y - points[points.length - 1]) < 4.5 / scale
+                  )
                 ) {
                   endDrawing();
                 } else if (index === viewPoints.length - 2) {
@@ -82,6 +96,23 @@ const PolygonDrawer = (
               }}
             />
           ))
+        }
+        {
+          viewPoints.length > 4 &&
+          <Line
+            x={0}
+            y={0}
+            stroke={strokeColor}
+            dash={[6, 3]}
+            strokeWidth={1 / scale}
+            points={
+              [
+                viewPoints[0],
+                viewPoints[1],
+                viewPoints[viewPoints.length - 2],
+                viewPoints[viewPoints.length - 1],
+              ]
+            }/>
         }
       </Layer>
     </>

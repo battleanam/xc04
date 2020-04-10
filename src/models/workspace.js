@@ -1,6 +1,7 @@
-import { map } from 'lodash';
+import { map, filter } from 'lodash';
 import { loadShapes } from '@/pages/WorkSpace/service';
 import { v1 as uuid } from 'uuid';
+import key from 'keymaster';
 
 const picHeight = 713;
 
@@ -15,6 +16,8 @@ const Model = {
     shapes: [], // 标注列表
     shapesLoading: false, // 读取标注列表时的加载状态
     currentShape: -1, // 当前点击选中的 shapeId
+    viewport: { x: 0, y: 0 }, // 当前 previewer 展示区域在 konvaEngine 中的位置
+    viewportVisible: false, // 是否展示 viewport
   },
   effects: {
     * getShapes({ payload: filename }, { call, put, select }) {
@@ -85,20 +88,52 @@ const Model = {
         }
       });
 
+      const id = uuid();
+
       yield put({
         type: 'setShapes',
         payload: [
           ...shapes,
           {
-            id: uuid(),
+            id: id,
             cato: bugName,
             color,
             width,
             cnt4mask: payload,
             box: [x1, y1, x2, y2],
-            type: 'supplement'
+            type: 'supplement',
           },
         ],
+      });
+      yield put({
+        type: 'setCurrentShape',
+        payload: id,
+      });
+    },
+    * removeCurrentShape(_, { put, select }) {
+      const { currentShape, shapes } = yield select(state => state.workspace);
+      if (currentShape !== -1) {
+        const del = window.confirm('确定删除这个标注框吗');
+        if (del) {
+          yield put({
+            type: 'setCurrentShape',
+            payload: -1,
+          });
+          yield put({
+            type: 'setShapes',
+            payload: filter(shapes, ({ id }) => id !== currentShape),
+          });
+        }
+      }
+    },
+    * showViewport({ payload }, { call, put }) {
+      yield put({
+        type: 'setViewport',
+        payload,
+      });
+      yield put({
+        type: 'setViewportVisible',
+        payload: true,
       });
     },
   },
@@ -132,6 +167,27 @@ const Model = {
         ...state,
         currentShape: payload,
       };
+    },
+    setViewport(state, { payload }) {
+      return {
+        ...state,
+        viewport: payload,
+      };
+    },
+    setViewportVisible(state, { payload }) {
+      return {
+        ...state,
+        viewportVisible: payload,
+      };
+    },
+  },
+  subscriptions: {
+    keyDel({ dispatch }) {
+      key('delete', () => {
+        dispatch({
+          type: 'removeCurrentShape',
+        });
+      });
     },
   },
 };

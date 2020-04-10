@@ -141,4 +141,18 @@ class Insect extends Component {
 
 }
 
-export default connect(({ insect }) => ({ ...insect }))(Insect);
+export default connect(
+  (
+    {
+      insect: {
+        insectTypes,
+        modalVisible,
+      },
+    },
+  ) => (
+    {
+      insectTypes,
+      modalVisible,
+    }
+  ),
+)(Insect);

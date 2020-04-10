@@ -18,13 +18,18 @@ const PreViewer = (props) => {
     picHeight,
     stageWidth,
     stageHeight,
-    mousePosition: { mouseX, mouseY },
+    mousePosition: {
+      mouseX,
+      mouseY,
+    },
     scale,
     dispatch,
     currentShape,
     shapes,
     drawing,
+    selectedInsect = { color: 'red' },
   } = props;
+
 
   const picX = (stageWidth / 2 - mouseX * scale);
   const picY = (stageHeight / 2 - mouseY * scale);
@@ -53,15 +58,40 @@ const PreViewer = (props) => {
             payload: nextScale,
           });
         }}
-        onDragEnd={({ currentTarget: { attrs: { x, y } } }) => {
-          dispatch({
-            type: 'previewer/setMousePosition',
-            payload: {
-              mouseX: (stageWidth / 2 - x) / scale,
-              mouseY: (stageHeight / 2 - y) / scale,
+        onDragMove={
+          (
+            {
+              currentTarget: { attrs: { x, y } },
             },
-          });
-        }}
+          ) => {
+            dispatch({
+              type: 'workspace/showViewport',
+              payload: {
+                x: -(x - stageWidth / 2) / scale,
+                y: -(y - stageWidth / 2) / scale,
+              },
+            });
+          }
+        }
+        onDragEnd={
+          (
+            {
+              currentTarget: { attrs: { x, y } },
+            },
+          ) => {
+            dispatch({
+              type: 'previewer/setMousePosition',
+              payload: {
+                mouseX: (stageWidth / 2 - x) / scale,
+                mouseY: (stageHeight / 2 - y) / scale,
+              },
+            });
+            dispatch({
+              type: 'workspace/setViewportVisible',
+              payload: false,
+            });
+          }
+        }
         onMouseMove={({ evt: { offsetX, offsetY } }) => {
           if (drawing) {
             dispatch({
@@ -92,6 +122,10 @@ const PreViewer = (props) => {
                   type: 'previewer/setDrawing',
                   payload: true,
                 });
+                dispatch({
+                  type: 'workspace/setCurrentShape',
+                  payload: -1,
+                });
               }
             }}
           />
@@ -103,17 +137,20 @@ const PreViewer = (props) => {
               x={0}
               y={0}
               closed
-              strokeWidth={1 / scale}
-              stroke={'red'}
+              strokeWidth={2 / scale}
+              stroke={shape.color}
               points={shape.cnt4mask}
             />
-
           </Layer>
         }
 
         {
           drawing &&
-          <PolygonDrawer {...props} scale={scale}/>
+          <PolygonDrawer
+            {...props}
+            scale={scale}
+            strokeColor={selectedInsect.color}
+          />
         }
 
       </Stage>
@@ -121,4 +158,36 @@ const PreViewer = (props) => {
   );
 };
 
-export default connect(({ workspace, previewer }) => ({ ...workspace, ...previewer }))(PreViewer);
+export default connect(
+  (
+    {
+      workspace: {
+        src,
+        currentShape,
+        shapes,
+      },
+      previewer: {
+        scale,
+        drawing,
+        mousePosition,
+        points,
+        movingPoint,
+      },
+      insect: {
+        selectedInsect,
+      },
+    },
+  ) => (
+    {
+      src,
+      mousePosition,
+      scale,
+      currentShape,
+      shapes,
+      drawing,
+      selectedInsect,
+      points,
+      movingPoint,
+    }
+  ),
+)(PreViewer);

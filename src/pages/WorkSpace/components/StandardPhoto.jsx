@@ -75,7 +75,7 @@ const StandardPhoto = ({ selectedInsect, insectTypes, dispatch }) => {
                   border: `${weight}px solid ${color}`,
                   marginRight: 4,
                 }}/>
-                <span style={{ color }}>{bugName}</span>
+                <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>{bugName}</span>
               </div>
             } key={keyid} className={styles.tabPane}>
               <Item insectName={bugName} color={color}/>
@@ -88,4 +88,18 @@ const StandardPhoto = ({ selectedInsect, insectTypes, dispatch }) => {
 
 };
 
-export default connect(({ insect }) => ({ ...insect }))(StandardPhoto);
+export default connect(
+  (
+    {
+      insect: {
+        selectedInsect,
+        insectTypes,
+      },
+    },
+  ) => (
+    {
+      selectedInsect,
+      insectTypes,
+    }
+  ),
+)(StandardPhoto);

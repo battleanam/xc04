@@ -90,5 +90,25 @@ class Home extends Component {
   }
 }
 
-export default connect(({ home, insect }) => ({ ...home, ...insect }))(Home);
+export default connect(
+  (
+    {
+      home: {
+        picList,
+        picListLoading,
+        viewLength,
+      },
+      insect: {
+        insectStyles,
+      },
+    },
+  ) => (
+    {
+      picList,
+      picListLoading,
+      viewLength,
+      insectStyles,
+    }
+  ),
+)(Home);
 

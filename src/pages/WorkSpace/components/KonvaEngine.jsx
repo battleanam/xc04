@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
-import { Stage, Layer, Image, Line, Text } from 'react-konva';
+import { Stage, Layer, Image, Line, Text, Rect } from 'react-konva';
 import { map } from 'lodash';
 import { Spin } from 'antd';
 
@@ -123,6 +123,7 @@ const Polygon = (
       />
       <Text
         text={text}
+        // stroke={'rgba(0, 0, 0, 0.85)'}
         stroke={strokeColor}
         strokeWidth={1 + (currentShape === id)}
         y={(box[3] - box[1]) / 2 + box[1]}
@@ -172,9 +173,12 @@ const PolygonLayer = ({ shapes, selectedInsect, dispatch, ...other }) => {
  * @param width 标注区域宽度
  * @param height 标注区域高度
  * @param shapes 预处理的图形
+ * @param scale 缩放比例
  * @param shapesLoading 预处理图形的加载状态
  * @param selectedInsect 当前选中的害虫类型信息
  * @param currentShape 当前选中的标注框 id
+ * @param viewport 在 previewer 点击寻找的位置
+ * @param viewportVisible 是否展示 viewport
  * @param dispatch
  * @returns {*}
  * @constructor
@@ -182,8 +186,8 @@ const PolygonLayer = ({ shapes, selectedInsect, dispatch, ...other }) => {
 const KonvaEngine = (
   {
     src, width, height, shapes,
-    shapesLoading, selectedInsect,
-    dispatch, currentShape,
+    shapesLoading, selectedInsect, scale,
+    dispatch, currentShape, viewport, viewportVisible,
   },
 ) => {
 
@@ -216,8 +220,6 @@ const KonvaEngine = (
               type: 'previewer/setScale',
               payload: 2,
             });
-          } else {
-            console.log(122);
           }
 
         }}
@@ -237,9 +239,49 @@ const KonvaEngine = (
             currentShape={currentShape}
           />
         </Layer>
+        {
+          viewportVisible &&
+          <Layer>
+            <Rect
+              x={viewport.x - 385 / scale / 2}
+              y={viewport.y - 385 / scale / 2}
+              width={385 / scale}
+              height={385 / scale}
+              fill={'rgba(0, 255, 0, .3)'}
+            />
+          </Layer>
+        }
       </Stage>
     </Spin>
   );
 };
 
-export default connect(({ workspace, insect }) => ({ ...workspace, ...insect }))(KonvaEngine);
+export default connect(
+  (
+    {
+      workspace: {
+        shapes,
+        shapesLoading,
+        currentShape,
+        viewport,
+        viewportVisible,
+      },
+      insect: {
+        selectedInsect,
+      },
+      previewer: {
+        scale,
+      },
+    },
+  ) => (
+    {
+      shapes,
+      shapesLoading,
+      selectedInsect,
+      scale,
+      currentShape,
+      viewport,
+      viewportVisible,
+    }
+  ),
+)(KonvaEngine);

@@ -10,7 +10,7 @@ const FixHeightImg = ({ src, alt = '', height, className, noData = '图像加载
 
   useEffect(() => {
     const { clientWidth } = wrapper.current;
-    const temp = new Image();
+    let temp = new Image();
     temp.onload = () => {
       let { naturalWidth, naturalHeight } = temp;
       const result = height * naturalWidth / naturalHeight;
@@ -18,8 +18,7 @@ const FixHeightImg = ({ src, alt = '', height, className, noData = '图像加载
     };
     temp.src = src;
     return function() {
-
-    }
+    };
   }, [height, src]);
 
   return (
