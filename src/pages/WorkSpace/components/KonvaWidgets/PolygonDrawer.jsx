@@ -32,7 +32,7 @@ const PolygonDrawer = (
       if (viewPoints.length > 6) {
         dispatch({
           type: 'workspace/addShape',
-          payload: viewPoints,
+          payload: points,
         });
       }else {
         message.info('本次绘制被系统丢弃，因为绘制的点不足以构成多边形。');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout } from 'antd';
 import { useDispatch } from 'dva';
 
@@ -10,7 +10,10 @@ const EmptyLayout = ({ children }) => {
 
   const dispatch = useDispatch();
 
-  dispatch({ type: 'browser/init' });
+  useEffect(() => {
+    dispatch({ type: 'browser/init' });
+  }, [dispatch]);
+
 
   return (
     <Layout className={styles.EmptyLayout}>

@@ -27,7 +27,7 @@ const PreViewer = (props) => {
     currentShape,
     shapes,
     drawing,
-    selectedInsect = { color: 'red' },
+    // selectedInsect = { color: 'red' },
   } = props;
 
 

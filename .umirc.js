@@ -29,8 +29,8 @@ export default {
       changeOrigin: true,
     },
     '/img/': {
-      // target: 'http://124.128.96.67:5000',
-      target: 'http://192.168.166.161:5000',
+      target: 'http://124.128.96.67:5000',
+      // target: 'http://192.168.166.161:5000',
       changeOrigin: true,
       pathRewrite: { '^/img': '' },
     },
