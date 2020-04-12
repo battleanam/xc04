@@ -137,8 +137,8 @@ const PreViewer = (props) => {
               x={0}
               y={0}
               closed
-              strokeWidth={2 / scale}
-              stroke={shape.color}
+              strokeWidth={1 / scale}
+              stroke={'red'}
               points={shape.cnt4mask}
             />
           </Layer>
@@ -149,7 +149,7 @@ const PreViewer = (props) => {
           <PolygonDrawer
             {...props}
             scale={scale}
-            strokeColor={selectedInsect.color}
+            strokeColor={'red'}
           />
         }
 

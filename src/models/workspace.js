@@ -1,7 +1,8 @@
-import { map, filter } from 'lodash';
-import { loadShapes } from '@/pages/WorkSpace/service';
+import { map, filter, fill, slice, chunk } from 'lodash';
+import { loadShapes, saveShapes } from '@/pages/WorkSpace/service';
 import { v1 as uuid } from 'uuid';
 import key from 'keymaster';
+import { message } from 'antd';
 
 const picHeight = 713;
 
@@ -9,6 +10,7 @@ const Model = {
   namespace: 'workspace',
   state: {
     visible: false, // 展示工作区模态框
+    edited: false, // 是否编辑过
     src: '', // 图片路径
     filename: '', // 文件名称
     name: '', // 图片名称  拍摄时间
@@ -18,16 +20,71 @@ const Model = {
     currentShape: -1, // 当前点击选中的 shapeId
     viewport: { x: 0, y: 0 }, // 当前 previewer 展示区域在 konvaEngine 中的位置
     viewportVisible: false, // 是否展示 viewport
+    originalAnnotation: {}, // 获取到的当前图片的原始信息
   },
   effects: {
+    * saveShapes(_, { call, put, select }) {
+
+      const {
+        originalAnnotation: {
+          height, weight, instruction,
+        },
+        filename,
+        deviceId,
+        shapes,
+      } = yield select(({ workspace }) => workspace);
+
+      const scale = picHeight / Math.min(height, weight);
+
+      const detect_info = map(shapes, ({ cato, box, cnt4mask }) => ({
+        cato,
+        score: 1,
+        box: map(box, n => n / scale),
+        cnt4mask: chunk(chunk(map(cnt4mask, n => Math.round(n / scale)), 2), 1),
+      }));
+
+      const saved = yield call(
+        saveShapes,
+        filename,
+        deviceId,
+        {
+          detect_info,
+          weight,
+          height,
+          instruction,
+        },
+      );
+
+      if (saved) {
+        message.success('保存成功');
+
+        yield put({ type: 'setEdited', payload: false });
+
+      } else {
+        message.error('保存失败，请稍后重试');
+      }
+
+    },
     * getShapes({ payload: filename }, { call, put, select }) {
+
+      yield put({ type: 'setEdited', payload: false });
+
       yield put({ type: 'setShapesLoading', payload: true });
+
       const {
         detect_info = [],
         height = 2448,
         weight = 3264,
+        instruction,
       } = yield call(loadShapes, filename);
+
+      yield put({
+        type: 'setOriginalAnnotation',
+        payload: { height, weight, instruction },
+      });
+
       const min = Math.min(height, weight); // 小边作为图片高度
+
       const scale = picHeight / min;
 
       const insectStyles = yield select(({ insect }) => insect.insectStyles);
@@ -52,15 +109,14 @@ const Model = {
 
       });
 
-      yield put({
-        type: 'setShapes',
-        payload: shapes,
-      });
+      yield put({ type: 'setShapes', payload: shapes });
+
       yield put({ type: 'setShapesLoading', payload: false });
     },
     * addShape({ payload }, { select, put }) {
 
       const { shapes } = yield select(state => state.workspace);
+
       const {
         selectedInsect = {
           color: 'red',
@@ -105,36 +161,55 @@ const Model = {
           },
         ],
       });
-      yield put({
-        type: 'setCurrentShape',
-        payload: id,
-      });
+
+      yield put({ type: 'setEdited', payload: true });
+
+      yield put({ type: 'setCurrentShape', payload: id });
+
     },
     * removeCurrentShape(_, { put, select }) {
+
       const { currentShape, shapes } = yield select(state => state.workspace);
+
       if (currentShape !== -1) {
+
         const del = window.confirm('确定删除这个标注框吗');
+
         if (del) {
-          yield put({
-            type: 'setCurrentShape',
-            payload: -1,
-          });
+
+          yield put({ type: 'setCurrentShape', payload: -1 });
+
           yield put({
             type: 'setShapes',
             payload: filter(shapes, ({ id }) => id !== currentShape),
           });
+
+          yield put({ type: 'setEdited', payload: true });
+
         }
       }
     },
-    * showViewport({ payload }, { call, put }) {
+    * showViewport({ payload }, { put }) {
+
+      yield put({ type: 'setViewport', payload });
+
+      yield put({ type: 'setViewportVisible', payload: true });
+    },
+    * updateAShape({ payload, payload: { id } }, { put, select }) {
+
+      const { shapes } = yield select(state => state.workspace);
+
+      const index = shapes.findIndex(shape => shape.id = id);
+
       yield put({
-        type: 'setViewport',
-        payload,
+        type: 'setShapes',
+        payload: fill(slice(shapes), {
+          ...shapes[index],
+          ...payload,
+        }, index, index + 1),
       });
-      yield put({
-        type: 'setViewportVisible',
-        payload: true,
-      });
+
+      // const { shapes: s } = yield select(state => state.workspace);
     },
   },
   reducers: {
@@ -178,6 +253,18 @@ const Model = {
       return {
         ...state,
         viewportVisible: payload,
+      };
+    },
+    setOriginalAnnotation(state, { payload }) {
+      return {
+        ...state,
+        originalAnnotation: payload,
+      };
+    },
+    setEdited(state, { payload }) {
+      return {
+        ...state,
+        edited: payload,
       };
     },
   },

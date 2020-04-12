@@ -17,10 +17,12 @@ const Workspace = (
     deviceId,
     name,
     dispatch,
+    edited,
   },
 ) => {
 
   const picWidth = Math.ceil(3264 / 2448 * 713);
+  const height = document.body.clientHeight;
 
   return (
     <Modal
@@ -31,13 +33,18 @@ const Workspace = (
       width={'1366px'}
       bodyStyle={{
         padding: 0,
-        height: 768 - 55,
+        maxHeight: 768 - 55,
+        height: height - 55,
         position: 'relative',
       }}
       wrapClassName={'noPadding'}
       footer={null}
       maskClosable={false}
       onCancel={() => {
+
+        if (edited && !window.confirm('关闭弹窗将不会保存修改，点击确定继续')) {
+          return;
+        }
 
         dispatch({
           type: 'workspace/setVisible',
@@ -69,7 +76,16 @@ const Workspace = (
           className={cn(styles.operates, util.customScrollBar)}
           style={{ width: 1366 - picWidth + 'px' }}
         >
-          <Button type={'primary'} className={styles.saveBtn}>保存修改</Button>
+          <Button
+            type={'primary'}
+            className={styles.saveBtn}
+            disabled={!edited}
+            onClick={() => {
+              dispatch({
+                type: 'workspace/saveShapes',
+              });
+            }}
+          >保存修改</Button>
           <h4>测报灯编号: {deviceId}</h4>
           <h4>拍摄时间: {name}</h4>
           <StandardPhoto/>
@@ -94,6 +110,7 @@ export default connect(
         src,
         deviceId,
         name,
+        edited,
       },
     },
   ) => (
@@ -102,6 +119,7 @@ export default connect(
       src,
       deviceId,
       name,
+      edited,
     }
   ),
 )(Workspace);

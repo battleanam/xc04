@@ -3,7 +3,15 @@ import cn from 'classnames';
 
 import styles from './index.less';
 
-const FixHeightImg = ({ src, alt = '', height, className, noData = '图像加载失败' }) => {
+const FixHeightImg = (
+  {
+    src,
+    alt = '',
+    height,
+    className,
+    noData = '图像加载失败',
+  },
+) => {
 
   const wrapper = useRef();
   const [width, setWidth] = useState(0);
@@ -22,11 +30,18 @@ const FixHeightImg = ({ src, alt = '', height, className, noData = '图像加载
   }, [height, src]);
 
   return (
-    <div className={cn(className, styles.FixHeightImg)} ref={wrapper} style={{ width: '100%', height }}>
+    <div
+      ref={wrapper}
+      className={cn(className, styles.FixHeightImg)}
+      style={{ width: '100%', height }}
+    >
       {
         src ?
           <img src={src} alt={alt} style={{ width }}/> :
-          <div className={styles.noData}>
+          <div
+            className={styles.noData}
+            style={{ height, lineHeight: height + 'px' }}
+          >
             <span>{noData}</span>
           </div>
       }

@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { loadPics, getMarks } from '@/pages/Home/service';
-import { reduce } from 'lodash';
+import { reduce, concat, map } from 'lodash';
 import moment from 'moment';
 
 /**
@@ -38,12 +38,21 @@ const Model = {
     analysisList: [], // 对于一张图片的统计数据
     analysisLoading: false, // 统计数据加载状态
     imgList: [], // 当前加载的图像列表 存放 Image Dom Entity
-    deviceId: '69060502', // 设备编号
-    deviceList: [], // 设备列表
   },
   effects: {
-    * getPicList({ sDate, eDate, userName }, { put, call }) {
+    * getPicList(_, { put, call, select }) {
       yield put({ type: 'setPicListLoading', payload: true });
+      const {
+        dateRange: [sDate, eDate],
+        deviceId: userName,
+      } = yield select(
+        (
+          {
+            home: { dateRange },
+            device: { deviceId },
+          },
+        ) => ({ dateRange, deviceId }),
+      );
       const {
         Code, data, msg,
       } = yield call(
@@ -54,31 +63,45 @@ const Model = {
       );
       if (Code === 1000) {
         const picList = JSON.parse(data);
+        const { prePhoto, photoTakeMoment } = yield select(state => state.device);
         yield put({
           type: 'setPicList',
-          payload: picList.map(pic => {
-            const filename = pic.split(',')[0];
-            const [deviceId, date] = filename.split('_');
-            const year = date.slice(0, 4),
-              month = date.slice(4, 6),
-              day = date.slice(6, 8),
-              hours = date.slice(8, 10),
-              minutes = date.slice(10, 12),
-              seconds = date.slice(12, 14);
-            const name = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-            const id = filename.split('.')[0];
-            return {
-              id,
-              deviceId,
-              name,
+          payload: concat(
+            map(prePhoto, ({ url, filename }) => ({
+              id: '1',
+              deviceId: userName,
+              name: photoTakeMoment.format('YYYY-MM-DD HH:mm:ss'),
+              src: url,
               filename,
-              src: `${window.host}/Su/GetBigPic?filename=${filename}`,
-              smallSrc: `${window.host}/Su/GetSmallPic?filename=${filename}`,
-            };
-          }),
+            })),
+            map(picList, pic => {
+              const filename = pic.split(',')[0];
+              const [deviceId, date] = filename.split('_');
+              const year = date.slice(0, 4),
+                month = date.slice(4, 6),
+                day = date.slice(6, 8),
+                hours = date.slice(8, 10),
+                minutes = date.slice(10, 12),
+                seconds = date.slice(12, 14);
+              const name = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+              const id = filename.split('.')[0];
+              return {
+                id,
+                deviceId,
+                name,
+                filename,
+                src: `${window.host}/Su/GetBigPic?filename=${filename}`,
+                smallSrc: `${window.host}/Su/GetSmallPic?filename=${filename}`,
+              };
+            }),
+          ),
         });
         message.success(msg);
       } else {
+        yield put({
+          type: 'setPicList',
+          payload: [],
+        });
         message.error(msg);
       }
       yield put({ type: 'setPicListLoading', payload: false });
@@ -160,23 +183,6 @@ const Model = {
       return {
         ...state,
         imgList: payload,
-      };
-    },
-    setDeviceList(state, { payload }) {
-      let deviceId = '';
-      if (Array.isArray(payload) && payload.length) {
-        deviceId = payload[0];
-      }
-      return {
-        ...state,
-        deviceId,
-        deviceList: payload,
-      };
-    },
-    setDeviceId(state, { payload }) {
-      return {
-        ...state,
-        deviceId: payload,
       };
     },
   },

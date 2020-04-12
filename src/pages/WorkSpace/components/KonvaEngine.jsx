@@ -59,9 +59,13 @@ const Polygon = (
   },
 ) => {
 
-  const [text, setText] = useState(cato);
-  const [strokeColor, setStrokeColor] = useState(color);
-  const [strokeWidth, setStrokeWidth] = useState(lineWidth);
+  const [insectStyle, setInsectStyle] = useState({
+    text: cato,
+    strokeColor: color,
+    strokeWidth: lineWidth,
+  });
+
+  const { text, strokeColor, strokeWidth } = insectStyle;
 
   const onClick = ({ evt: { offsetX, offsetY } }) => {
 
@@ -92,14 +96,40 @@ const Polygon = (
   const onDbClick = () => {
     timer && clearTimeout(timer);
     if (text !== bugName) {
-      setText(bugName);
-      setStrokeColor(insectColor);
-      setStrokeWidth(insectWidth);
+      setInsectStyle({
+        text: bugName,
+        strokeColor: insectColor,
+        strokeWidth: insectWidth,
+      });
+      // dispatch({
+      //   type: 'workspace/updateAShape',
+      //   payload: {
+      //     id,
+      //     cato: bugName,
+      //     color: insectColor,
+      //     width: insectWidth,
+      //   },
+      // });
     } else {
-      setText('');
-      setStrokeColor('red');
-      setStrokeWidth(1);
+      setInsectStyle({
+        text: '',
+        strokeColor: 'red',
+        strokeWidth: 1,
+      });
+      // dispatch({
+      //   type: 'workspace/updateAShape',
+      //   payload: {
+      //     id,
+      //     cato: bugName,
+      //     color: insectColor,
+      //     width: insectWidth,
+      //   },
+      // });
     }
+    dispatch({
+      type: 'workspace/setEdited',
+      payload: true,
+    });
   };
 
   let timer;

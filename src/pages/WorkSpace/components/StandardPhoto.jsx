@@ -22,7 +22,7 @@ const Item = ({ insectName, color }) => {
       >
         暂无
         <span style={{ color }}>{insectName}</span>
-        的标准照
+        的标准图像
       </span>
     );
   }
@@ -65,19 +65,23 @@ const StandardPhoto = ({ selectedInsect, insectTypes, dispatch }) => {
       {
         map(insectTypes, ({ bugName, keyid, color, weight }) => {
           return (
-            <TabPane tab={
-              <div
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <div style={{
-                  width: 16,
-                  height: 12,
-                  border: `${weight}px solid ${color}`,
-                  marginRight: 4,
-                }}/>
-                <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>{bugName}</span>
-              </div>
-            } key={keyid} className={styles.tabPane}>
+            <TabPane
+              tab={
+                <div
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <div style={{
+                    width: 16,
+                    height: 12,
+                    border: `${weight}px solid ${color}`,
+                    marginRight: 4,
+                  }}/>
+                  <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>{bugName}</span>
+                </div>
+              }
+              key={keyid}
+              className={styles.tabPane}
+            >
               <Item insectName={bugName} color={color}/>
             </TabPane>
           );

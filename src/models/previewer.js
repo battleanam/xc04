@@ -1,3 +1,6 @@
+import { dropRight } from 'lodash';
+import key from 'keymaster';
+
 const Model = {
   namespace: 'previewer',
   state: {
@@ -6,6 +9,27 @@ const Model = {
     drawing: false, // 是否处于绘制状态
     points: [], // 绘制矩形时的点集
     movingPoint: [], // 跟随鼠标移动的点的坐标
+  },
+  effects: {
+    * dropPoint(_, { select, put }) {
+      const { points, drawing } = yield select(state => state.previewer);
+      if (drawing) {
+        yield put({
+          type: 'setPoints',
+          payload: dropRight(points, 2),
+        });
+        if (points.length === 2) {
+          yield put({
+            type: 'setDrawing',
+            payload: false,
+          });
+          yield put({
+            type: 'setMovingPoint',
+            payload: [],
+          });
+        }
+      }
+    },
   },
   reducers: {
     setMousePosition(state, { payload }) {
@@ -37,6 +61,15 @@ const Model = {
         ...state,
         movingPoint: payload,
       };
+    },
+  },
+  subscriptions: {
+    keyCtrlZ({ dispatch }) {
+      key('⌘+z, ctrl+z', () => {
+        dispatch({
+          type: 'dropPoint',
+        });
+      });
     },
   },
 };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import cn from 'classnames';
 
-import { Button, Select, ConfigProvider, Layout, message, Menu, Avatar, Dropdown } from 'antd';
+import { Button, Select, ConfigProvider, Layout, Menu, Avatar, Dropdown } from 'antd';
 import XRangePicker from '@/layouts/BasicLayout/components/XRangePicker';
 import Logo from '@/layouts/BasicLayout/components/Logo';
 
@@ -35,7 +35,8 @@ class BasicLayout extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    message.success('登录成功！');
+    // message.success('登录成功！');
+    dispatch({ type: 'home/getPicList' });
     const username = sessionStorage.getItem('username');
     if (username) {
       dispatch({
@@ -68,7 +69,7 @@ class BasicLayout extends Component {
               bordered={false}
               onChange={value => {
                 dispatch({
-                  type: 'home/setDeviceId',
+                  type: 'device/setDeviceId',
                   payload: value,
                 });
               }}
@@ -92,12 +93,7 @@ class BasicLayout extends Component {
               size={'small'}
               type={'primary'}
               onClick={() => {
-                dispatch({
-                  type: 'home/getPicList',
-                  sDate: dateRange[0],
-                  eDate: dateRange[1],
-                  userName: deviceId,
-                });
+                dispatch({ type: 'home/getPicList' });
               }}
             >查询</Button>
 
@@ -152,6 +148,8 @@ export default connect(
       home: {
         dateUnit,
         dateRange,
+      },
+      device: {
         deviceId,
       },
       user: {

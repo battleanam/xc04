@@ -120,7 +120,18 @@ class Insect extends Component {
                       className={styles.insectPic}
                       src={urls ? urls[0] : ''}
                       height={120}
-                      noData={'暂无此类害虫的标准图像'}
+                      noData={
+                        <>
+                          暂无
+                          <span
+                            style={{
+                              color,
+                              margin: '0 4px',
+                            }}
+                          >{bugName}</span>
+                          的标准图像
+                        </>
+                      }
                     />
                   </div>
                 </Card>

@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "latest",
+    "@antv/g2": "^4.0.6",
+    "@antv/g2plot": "^1.0.3",
     "antd": "^4.1.0",
     "classnames": "latest",
     "dva": "^2.6.0-beta.6",
