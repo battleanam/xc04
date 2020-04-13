@@ -69,10 +69,14 @@ const DeviceSummary = (props) => {
 
   const {
     clientHeight,
+    clientWidth,
     deviceId,
     online,
     dispatch,
   } = props;
+
+  const chartHeight = clientHeight - 128 - 164 - 32 - 96;
+  const chartWidth = clientWidth - chartHeight * 340 / 804 - 256;
 
   return (
     <div className={styles.DeviceSummary}>
@@ -142,6 +146,9 @@ const DeviceSummary = (props) => {
                 type: 'device/takePhoto',
               });
             }}
+            style={{
+              marginRight: 12,
+            }}
           >拍摄</Button>
 
           <Button
@@ -153,7 +160,10 @@ const DeviceSummary = (props) => {
 
         </div>
 
-        <Analysis/>
+        <Analysis
+          height={chartHeight}
+          width={chartWidth}
+        />
 
       </div>
       <DeviceWorkingLoading/>

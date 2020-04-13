@@ -68,7 +68,7 @@ const Model = {
           type: 'setPicList',
           payload: concat(
             map(prePhoto, ({ url, filename }) => ({
-              id: '1',
+              id: filename,
               deviceId: userName,
               name: photoTakeMoment.format('YYYY-MM-DD HH:mm:ss'),
               src: url,

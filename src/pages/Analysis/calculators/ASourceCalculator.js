@@ -4,22 +4,27 @@ import moment from 'moment';
 /**
  * 将原始数据提取成 { 杨扇舟蛾: {2020-11-11： 1} } 的形式
  * @param ASource
+ * @param insects
  * @returns {*}
- * @constructor
  */
-export function aSourceToOriginal(ASource) {
+export function aSourceToOriginal(ASource, insects) {
 
-  return reduce(ASource, (result, { img_name, anno_info: detect_info }) => {
+  return reduce(ASource, (result, { img_name, anno_info }) => {
     const dateStr = split(img_name, '_')[1];
     const dateMoment = moment(truncate(dateStr, { length: 8, omission: '' }), 'YYYYMMDD');
     const date = dateMoment.format('YYYY-MM-DD');
-    forEach(detect_info, (result, { cato }) => {
+    const { detect_info } = JSON.parse(anno_info);
+    forEach(detect_info, ({ cato = '0' }) => {
+      if (!isNaN(cato)) {
+        cato = insects[+cato].bugName;
+      }
       if (result[cato]) {
         result[cato][date] = (result[cato][date] || 0) + 1;
       } else {
         result[cato] = { [date]: 1 };
       }
     });
+    return result;
   }, {});
 }
 
@@ -33,6 +38,7 @@ export function calcTSource(originalASource) {
   const now = moment().get('year');
   return reduce(originalASource, (result, value, key) => {
     result[key] = splitTime(value, now - 1, now);
+    return result;
   }, {});
 }
 

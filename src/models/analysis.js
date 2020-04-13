@@ -1,3 +1,4 @@
+import { slice } from 'lodash';
 import { searchByStation } from '@/pages/Analysis/service';
 
 const Model = {
@@ -8,9 +9,13 @@ const Model = {
   effects: {
     * getASource(_, { call, put, select }) {
       const { deviceId } = yield select(({ device }) => device);
-      console.log(deviceId);
+      yield put({ type: 'insect/getInsectTypes' });
       const list = yield call(searchByStation, deviceId);
-      console.log(list);
+      if (list) {
+        yield put({ type: 'setASource', payload: slice(list.data, 0, 500) });
+      } else {
+        yield put({ type: 'setASource', payload: [] });
+      }
     },
   },
   reducers: {

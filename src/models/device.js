@@ -20,32 +20,32 @@ const imgList = [
 const statusList = [
   {
     msg: '正在打开补光灯',
-    ms: 500,
+    ms: 1500,
     process: 0,
   },
   {
     msg: '补光灯已打开',
     ms: 500,
-    process: 20,
+    process: 1,
   },
   {
     msg: '正在拍照',
-    ms: 500,
-    process: 0,
+    ms: 1500,
+    process: 2,
   },
   {
     msg: '拍照完成，正在上传到云服务器',
-    ms: 500,
-    process: 20,
+    ms: 1500,
+    process: 3,
   },
   {
     msg: '上传完毕',
-    ms: 500,
-    process: 5,
+    ms: 1500,
+    process: 4,
   },
   {
     msg: '',
-    ms: 500,
+    ms: 1500,
     process: 5,
   },
 ];
@@ -64,6 +64,7 @@ const Model = {
     insectClean: 1, // 清虫模块
     disc: 1, // 圆盘
     status: '', // 当前工作状态 补光灯、加热、拍照 为空表示没在工作
+    statusIndex: -1, // 当前工作状态下标
     prePhoto: [], // 预先准备好的照片路径
     photoTakeMoment: moment(), // 点击拍照的时间
     currentPic: 0, // 当前已经加入图片列表的图片下标
@@ -75,7 +76,11 @@ const Model = {
         message.info('设备正在工作，请稍后再进行操作');
       } else {
         for (let i = 0; i < statusList.length; i++) {
+
+          yield put({ type: 'setStatusIndex', payload: i });
+
           const { ms, msg } = statusList[i];
+
           switch (i) {
             case 1:
               yield put({
@@ -92,14 +97,12 @@ const Model = {
             default:
               break;
           }
-          yield put({
-            type: 'setStatus',
-            payload: msg,
-          });
+          yield put({ type: 'setStatus', payload: msg });
           yield delay(ms);
         }
 
         yield put({ type: 'addPrePhoto' });
+        yield put({ type: 'setStatusIndex', payload: -1 });
 
         yield put({
           type: 'setCurrentPic',
@@ -212,6 +215,12 @@ const Model = {
       return {
         ...state,
         currentPic: payload,
+      };
+    },
+    setStatusIndex(state, { payload }) {
+      return {
+        ...state,
+        statusIndex: payload,
       };
     },
   },

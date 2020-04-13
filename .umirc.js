@@ -2,6 +2,7 @@
 
 export default {
   treeShaking: true,
+  history: 'hash',
   routes: [
     {
       path: '/',
@@ -20,6 +21,7 @@ export default {
       component: '../layouts/EmptyLayout/index',
       routes: [
         { path: '/device/cbd', component: '../pages/DeviceSummary/index' },
+        { path: '/device/spore', component: '../pages/Spore/index' },
       ],
     },
   ],

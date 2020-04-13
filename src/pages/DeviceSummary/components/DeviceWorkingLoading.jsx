@@ -1,28 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { connect } from 'dva';
 import { Modal, Steps } from 'antd';
-import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
+import { CheckOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const { Step } = Steps;
 
 const DeviceWorkingLoading = (
   {
     status,
+    statusIndex,
   },
 ) => {
+
+  useEffect(() => {
+    console.log(statusIndex);
+  }, [statusIndex]);
+
   return (
     <Modal
       centered
       visible={status !== ''}
       footer={null}
-      title={'照片拍摄中...'}
+      title={status}
     >
-      <Steps>
-        <Step status="finish" title="Login" icon={<UserOutlined/>}/>
-        <Step status="finish" title="Verification" icon={<SolutionOutlined/>}/>
-        <Step status="process" title="Pay" icon={<LoadingOutlined/>}/>
-        <Step status="wait" title="Done" icon={<SmileOutlined/>}/>
+      <Steps current={4}>
+        <Step
+          title="开补光灯"
+          icon={statusIndex < 1 ? <LoadingOutlined/> : <CheckOutlined/>}
+        />
+        <Step
+          title="拍照"
+          icon={statusIndex < 3 ? <LoadingOutlined/> : <CheckOutlined/>}
+        />
+        <Step
+          title="上传"
+          icon={statusIndex < 4 ? <LoadingOutlined/> : <CheckOutlined/>}
+        />
+        <Step
+          title="完成"
+          icon={statusIndex < 5 ? <LoadingOutlined/> : <CheckOutlined/>}
+        />
       </Steps>
     </Modal>
   );
@@ -33,11 +51,13 @@ export default connect(
     {
       device: {
         status,
+        statusIndex,
       },
     },
   ) => (
     {
       status,
+      statusIndex,
     }
   ),
 )(DeviceWorkingLoading);
